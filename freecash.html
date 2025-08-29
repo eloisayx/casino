@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>两个活动介绍</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ======================
+       星空闪烁+微动背景
+       ====================== */
+    #background-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: #111;
+    }
+
+    /* ======================
+       LOGO + 渐变光晕
+       ====================== */
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+      color: #fff;
+      position: relative;
+    }
+
+    .logo-wrapper {
+      display: inline-block;
+      position: relative;
+      border-radius: 12px;
+      padding: 4px;
+      background: linear-gradient(90deg, #ff6ec7, #ffc107, #00f7ff, #ff6ec7);
+      background-size: 300% 300%;
+      animation: gradientMove 5s linear infinite;
+    }
+
+    .logo-wrapper img {
+      width: 120px;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 110, 199, 0.6),
+                  0 0 40px rgba(255, 193, 7, 0.4),
+                  0 0 60px rgba(0, 247, 255, 0.2);
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ======================
+       H1 渐变文字效果
+       ====================== */
+    .header h1 {
+      font-size: 2.5em;
+      margin: 15px 0 0 0;
+      background: linear-gradient(90deg, #ff6ec7, #ffc107, #00f7ff, #ff6ec7);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s linear infinite;
+    }
+
+    /* ======================
+       活动卡片样式
+       ====================== */
+    .activities {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 3px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .activity::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 15px;
+      padding: 3px;
+      background: linear-gradient(90deg, #ff6ec7, #ffc107, #00f7ff, #ff6ec7);
+      background-size: 300% 300%;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      animation: gradientMove 5s linear infinite;
+      z-index: 3;
+    }
+
+    .activity:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    }
+
+    .activity:hover::before {
+      opacity: 1;
+    }
+
+    /* ======================
+       轮播样式
+       ====================== */
+    .carousel {
+      width: 50%;
+      height: 250px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    .carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .carousel img.active {
+      opacity: 1;
+    }
+
+    .activity-content {
+      padding: 20px;
+      width: 50%;
+      z-index: 2;
+    }
+
+    .activity-content h2 {
+      margin-top: 0;
+      font-size: 1.8em;
+      background: linear-gradient(90deg, #ff6ec7, #ffc107, #00f7ff, #ff6ec7);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s linear infinite;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    /* h2 下方渐变分割线 */
+    .activity-content h2::after {
+      content: "";
+      display: block;
+      width: 500px;
+      height: 3px;
+      margin-top: 5px;
+      background: linear-gradient(90deg, #ff6ec7, #ffc107, #00f7ff, #ff6ec7);
+      background-size: 300% 300%;
+      animation: gradientMove 5s linear infinite;
+      border-radius: 2px;
+    }
+
+    .activity-content p {
+      font-size: 1em;
+      line-height: 1.6;
+    }
+
+    .activity:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    /* ======================
+       移动端优化
+       ====================== */
+    @media (max-width: 768px) {
+      .activity {
+        flex-direction: column !important; 
+        align-items: center;
+      }
+      .carousel {
+        width: 100%;
+        height: 200px;
+      }
+      .activity-content {
+        width: 100%;
+        padding: 15px 10px;
+        box-sizing: border-box;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 背景 Canvas -->
+  <canvas id="background-canvas"></canvas>
+
+  <div class="header">
+    <div class="logo-wrapper">
+      <img src="https://i.postimg.cc/bvn795LK/yono-rummy-modified.png" alt="网站LOGO" />
+    </div>
+    <h1>FREE CASH</h1>
+  </div>
+
+  <section class="activities">
+    <div class="activity">
+      <div class="carousel">
+        <img src="https://prosafeimg.s3.ap-south-1.amazonaws.com/uploads/20250829/68b14de57cb2e.png" class="active"/>
+        <img src="https://i.postimg.cc/qRwZHpCn/FC.png"/>
+      </div>
+      <div class="activity-content">
+        <h2>FREE CASH</h2>
+        <p>Freecash - The system randomly generates a number. Simply complete the sharing and reach ₹200.</p>
+        <p>Complete the sharing, share it with friends, and easily claim generous rewards.</p>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="carousel">
+        <img src="https://prosafeimg.s3.ap-south-1.amazonaws.com/uploads/20250829/68b14de59a5c6.png" class="active"/>
+        <img src="https://i.postimg.cc/q7Pzmgnj/free-cash-3rd.png"/>
+      </div>
+      <div class="activity-content">
+        <h2>FREE CASH SHARE & CLAIM</h2>
+        <p>Are you ready to receive Yono Rummy Freecash Advanced Upgrade? Freecash Share & Claim makes it easy for you to become a Yono Rummy agent and earn commissions instantly. In addition, you can earn ₹100 cash just by sharing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================
+       星空闪烁+微动脚本
+       ====================== -->
+  <script>
+    const canvas = document.getElementById('background-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    const stars = [];
+    const numStars = 120;
+
+    function initStars() {
+      stars.length = 0;
+      for(let i = 0; i < numStars; i++){
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          baseR: Math.random() * 1.5 + 0.5,
+          r: 0,
+          alpha: Math.random(),
+          deltaAlpha: Math.random() * 0.02 + 0.005,
+          deltaR: Math.random() * 0.02 + 0.005,
+          dx: (Math.random() - 0.5) * 0.2,
+          dy: (Math.random() - 0.5) * 0.2
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.baseR + s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        ctx.fill();
+
+        s.alpha += s.deltaAlpha;
+        if(s.alpha <= 0) { s.alpha = 0; s.deltaAlpha = Math.abs(s.deltaAlpha); }
+        if(s.alpha >= 1) { s.alpha = 1; s.deltaAlpha = -Math.abs(s.deltaAlpha); }
+
+        s.r += s.deltaR;
+        if(s.r <= -s.baseR*0.3) { s.r = -s.baseR*0.3; s.deltaR = Math.abs(s.deltaR); }
+        if(s.r >= s.baseR*0.3) { s.r = s.baseR*0.3; s.deltaR = -Math.abs(s.deltaR); }
+
+        s.x += s.dx;
+        s.y += s.dy;
+
+        if(s.x < 0) s.x = width;
+        if(s.x > width) s.x = 0;
+        if(s.y < 0) s.y = height;
+        if(s.y > height) s.y = 0;
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initStars();
+    });
+
+    initStars();
+    drawStars();
+
+    /* ======================
+       轮播脚本
+       ====================== */
+    function initCarousel() {
+      const carousels = document.querySelectorAll('.carousel');
+      carousels.forEach(carousel => {
+        const imgs = carousel.querySelectorAll('img');
+        imgs.forEach(img => img.style.opacity = 0);
+        let index = 0;
+        imgs[index].style.opacity = 1;
+
+        setInterval(() => {
+          const prev = index;
+          index = (index + 1) % imgs.length;
+          imgs[prev].style.opacity = 0;
+          imgs[index].style.opacity = 1;
+        }, 3000);
+      });
+    }
+
+    window.addEventListener('load', initCarousel);
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.carousel img').forEach(img => img.style.opacity = 0);
+      initCarousel();
+    });
+  </script>
+</body>
+</html>
